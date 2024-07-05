@@ -24,14 +24,16 @@ const WeightInputs = () => {
   };
 
   // Update current weight and recalculate left to lose
-  const handleCurrentWeightChange = (e) => {
+  const handleCurrentWeightChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const newCurrentWeight = parseFloat(e.target.value);
     setCurrentWeight(newCurrentWeight);
     localStorage.setItem("currentWeight", newCurrentWeight.toString());
   };
 
   // Update goal weight and recalculate left to lose
-  const handleGoalWeightChange = (e) => {
+  const handleGoalWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newGoalWeight = parseFloat(e.target.value);
     setGoalWeight(newGoalWeight);
     localStorage.setItem("goalWeight", newGoalWeight.toString());
