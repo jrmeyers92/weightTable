@@ -1,34 +1,51 @@
-export const calculateWeightsWeeks = (
-  initialWeight: number,
+export type WeekWeight = {
+  week: number;
+  weight: string;
+  goalReached: boolean;
+};
+
+export type DeficitResult = {
+  [deficit: number]: {
+    weekWeights: WeekWeight[];
+  };
+};
+
+export function calculateWeightLoss(
+  currentWeight: number,
   goalWeight: number,
-  dailyDeficit: number
-): number[] => {
-  const weeklyWeights: number[] = [];
-  let amountToLose = initialWeight - goalWeight;
-  const weightLossPerWeek = (dailyDeficit * 7) / 3500; // Moved outside the loop for efficiency
-  let currentWeight = initialWeight; // Use a local variable instead of mutating the parameter
+  dailyDeficits: number[]
+): DeficitResult[] {
+  const poundsPerCalorie = 3500; // 3500 calories in a pound of body fat
+  const daysInWeek = 7;
+  let weeksToGoal: number | undefined = undefined;
 
-  while (amountToLose > 0) {
-    currentWeight -= weightLossPerWeek;
-    weeklyWeights.push(currentWeight);
-    amountToLose -= weightLossPerWeek;
-  }
+  const results = dailyDeficits.reduce((acc: any, deficit) => {
+    let weight = currentWeight;
+    const weekWeights: WeekWeight[] = [];
 
-  return weeklyWeights;
-};
+    // Calculate weeks to goal for the first deficit to set the number of weeks for all
+    if (weeksToGoal === undefined) {
+      weeksToGoal = 0;
+      while (weight > goalWeight) {
+        weight -= (deficit * daysInWeek) / poundsPerCalorie;
+        weeksToGoal++;
+      }
+    }
 
-export const createTableJson = (currentWeight: number, goalWeight: number) => {
-  const dailyDeficits = [500, 750, 1000];
-  const tableJson: { [key: number]: number[] } = {};
-  dailyDeficits.forEach((deficit) => {
-    tableJson[deficit] = calculateWeightsWeeks(
-      currentWeight,
-      goalWeight,
-      deficit
-    );
-  });
+    // Reset for actual calculation
+    weight = currentWeight;
+    for (let i = 1; i <= weeksToGoal; i++) {
+      weight -= (deficit * daysInWeek) / poundsPerCalorie;
+      weekWeights.push({
+        week: i,
+        weight: weight.toFixed(2),
+        goalReached: weight <= goalWeight,
+      });
+    }
 
-  console.log(tableJson);
+    acc[deficit] = { weekWeights };
+    return acc;
+  }, {});
 
-  return tableJson;
-};
+  return [results];
+}

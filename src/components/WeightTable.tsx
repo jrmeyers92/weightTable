@@ -1,46 +1,67 @@
 import { useWeight } from "@/context/WeightContext";
-import { createTableJson } from "@/lib/calculations";
+import {
+  calculateWeightLoss,
+  DeficitResult,
+  WeekWeight,
+} from "@/lib/calculations";
+import { cn } from "@/lib/utils";
 import { WeightContextType } from "@/types/global";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const WeightTable = () => {
+const WeightTable: React.FC = () => {
   const { currentWeight, goalWeight }: WeightContextType = useWeight();
-  const [tableJson, setTableJson] = useState<{ [key: string]: number[] }>({});
+
+  const [result, setResult] = useState<DeficitResult[]>([]);
+
+  const dailyDeficits = [250, 500, 750, 1000];
 
   useEffect(() => {
-    setTableJson(createTableJson(currentWeight, goalWeight));
+    const weightLossResult = calculateWeightLoss(
+      currentWeight,
+      goalWeight,
+      dailyDeficits
+    );
+    setResult(weightLossResult);
   }, [currentWeight, goalWeight]);
 
-  // Calculate the maximum array length to determine the number of weeks
-  const maxWeeks = Math.max(
-    ...Object.values(tableJson).map((arr) => arr.length)
-  );
+  // Assuming result[0] contains the data structure as per your function's return type
+  const data = result[0] || {};
 
   return (
-    <div className="my-6">
-      <table className="mx-auto">
-        <thead>
-          <tr>
-            <th className="px-2">Week</th>
-            <th className="px-2">500 Calorie Deficit</th>
-            <th className="px-2">750 Calorie Deficit</th>
-            <th className="px-2">1000 Calorie Deficit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {Array.from({ length: maxWeeks }).map((_, weekIndex) => (
-            <tr key={weekIndex}>
-              <td>{weekIndex + 1}</td>
-              {Object.keys(tableJson).map((deficit, index) => (
-                <td className="px-2" key={index}>
-                  {tableJson[deficit][weekIndex] || "-"}
-                </td>
-              ))}
+    <table className="mx-auto my-6">
+      <thead>
+        <tr>
+          <th>Week / Deficit</th>
+          {dailyDeficits.map((deficit) => (
+            <th key={deficit}>{deficit}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {Object.values(data).length > 0 &&
+          Object.values(data)[0].weekWeights.map((week: WeekWeight) => (
+            <tr key={week.week}>
+              <td>{`Week ${week.week}`}</td>
+              {dailyDeficits.map((deficit) => {
+                const weekData = data[deficit].weekWeights.find(
+                  (w) => w.week === week.week
+                );
+                return (
+                  <td
+                    key={deficit}
+                    className={cn(
+                      "px-2",
+                      weekData?.goalReached ? "bg-green-400" : ""
+                    )}
+                  >
+                    {weekData?.weight}
+                  </td>
+                );
+              })}
             </tr>
           ))}
-        </tbody>
-      </table>
-    </div>
+      </tbody>
+    </table>
   );
 };
 

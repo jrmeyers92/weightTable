@@ -56,7 +56,7 @@ const WeightInputs = () => {
   }, []);
 
   return (
-    <div className="container flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4">
       <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 items-center justify-center w-full">
         <div>
           <Label htmlFor="currentWeight">Current Weight</Label>

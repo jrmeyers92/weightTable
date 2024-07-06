@@ -5,10 +5,12 @@ import WeightTable from "@/components/WeightTable";
 import { WeightProvider } from "@/context/WeightContext";
 export default function Home() {
   return (
-    <main className="py-4 container">
+    <main className="py-4">
       <WeightProvider>
-        <WeightInputs />
-        <WeightTable />
+        <div className="container my-6">
+          <WeightInputs />
+          <WeightTable />
+        </div>
       </WeightProvider>
     </main>
   );
