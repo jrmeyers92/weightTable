@@ -18,12 +18,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <GoogleTagManager gtmId="G-G5MY6MJMD7" />
-
       <body className={inter.className}>
         <Nav />
         {children}
       </body>
+      <GoogleTagManager gtmId="G-0YZY74PHR8" />
     </html>
   );
 }
