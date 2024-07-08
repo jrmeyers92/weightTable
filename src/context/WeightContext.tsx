@@ -7,6 +7,12 @@ interface WeightContextType {
   setCurrentWeight: React.Dispatch<React.SetStateAction<number>>;
   goalWeight: number;
   setGoalWeight: React.Dispatch<React.SetStateAction<number>>;
+  heightFt: number;
+  setHeightFt: React.Dispatch<React.SetStateAction<number>>;
+  heightIn: number;
+  setHeightIn: React.Dispatch<React.SetStateAction<number>>;
+  bmi: number;
+  setBmi: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const WeightContext = createContext<WeightContextType | undefined>(undefined);
@@ -22,6 +28,9 @@ export const WeightProvider = ({ children }: { children: React.ReactNode }) => {
   const [leftToLose, setLeftToLose] = useState<number>(0);
   const [currentWeight, setCurrentWeight] = useState<number>(0);
   const [goalWeight, setGoalWeight] = useState<number>(0);
+  const [heightFt, setHeightFt] = useState<number>(0);
+  const [heightIn, setHeightIn] = useState<number>(0);
+  const [bmi, setBmi] = useState<number>(0);
 
   const value = {
     leftToLose,
@@ -30,6 +39,12 @@ export const WeightProvider = ({ children }: { children: React.ReactNode }) => {
     setCurrentWeight,
     goalWeight,
     setGoalWeight,
+    heightFt,
+    setHeightFt,
+    heightIn,
+    setHeightIn,
+    bmi,
+    setBmi,
   };
 
   return (

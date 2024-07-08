@@ -2,8 +2,13 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useWeight } from "@/context/WeightContext";
+import {
+  calculateBMI,
+  calculateBMIGroup,
+  calculateLeftToLose,
+} from "@/lib/calculations";
 import { WeightContextType } from "@/types/global";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const WeightInputs = () => {
   const {
@@ -13,17 +18,14 @@ const WeightInputs = () => {
     setCurrentWeight,
     goalWeight,
     setGoalWeight,
+    heightFt,
+    setHeightFt,
+    heightIn,
+    setHeightIn,
+    bmi,
+    setBmi,
   }: WeightContextType = useWeight();
 
-  // Function to calculate the weight left to lose
-  const calculateLeftToLose = () => {
-    if (currentWeight > 0 && goalWeight > 0) {
-      const result = currentWeight - goalWeight;
-      setLeftToLose(result);
-    }
-  };
-
-  // Update current weight and recalculate left to lose
   const handleCurrentWeightChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -36,12 +38,35 @@ const WeightInputs = () => {
   const handleGoalWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newGoalWeight = parseFloat(e.target.value);
     setGoalWeight(newGoalWeight);
-    localStorage.setItem("goalWeight", newGoalWeight.toString());
+
+    let calculatedBmi = calculateBMI(currentWeight, heightFt, heightIn);
+    if (typeof calculatedBmi === "number") {
+      let bmiGroup = calculateBMIGroup(calculatedBmi);
+    }
+  };
+
+  const handleHeightFtChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHeightFt = parseFloat(e.target.value);
+    setHeightFt(newHeightFt);
+    localStorage.setItem("heightFt", newHeightFt.toString());
+  };
+
+  const handleHeightInChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHeightIn = parseFloat(e.target.value);
+    setHeightIn(newHeightIn);
+    localStorage.setItem("heightIn", newHeightIn.toString());
   };
 
   useEffect(() => {
-    calculateLeftToLose();
-  }, [currentWeight, goalWeight]);
+    let lefttaLose = calculateLeftToLose(currentWeight, goalWeight);
+    if (typeof lefttaLose === "number") {
+      setLeftToLose(lefttaLose);
+    }
+    let calculatedBMI = calculateBMI(currentWeight, heightFt, heightIn);
+    if (typeof calculatedBMI === "number") {
+      setBmi(calculatedBMI);
+    }
+  }, [currentWeight, goalWeight, heightFt, heightIn]);
 
   useEffect(() => {
     const storedCurrentWeight = parseFloat(
@@ -51,6 +76,11 @@ const WeightInputs = () => {
       localStorage.getItem("goalWeight") || "0"
     );
 
+    const storedHeightFt = parseFloat(localStorage.getItem("heightFt") || "0");
+    const storedHeightIn = parseFloat(localStorage.getItem("heightIn") || "0");
+
+    setHeightFt(storedHeightFt);
+    setHeightIn(storedHeightIn);
     setCurrentWeight(storedCurrentWeight);
     setGoalWeight(storedGoalWeight);
   }, []);
@@ -88,6 +118,34 @@ const WeightInputs = () => {
             disabled
             id="leftToLose"
           />
+        </div>
+      </div>
+      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-2 items-center justify-center w-full">
+        <div>
+          <Label htmlFor="heightFt">Height in Feet</Label>
+          <Input
+            placeholder="Height in Feet"
+            type="number"
+            value={heightFt.toString()}
+            onChange={handleHeightFtChange}
+            id="heightFt"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="heightIn">Height in Feet</Label>
+          <Input
+            placeholder="Height in Feet"
+            type="number"
+            value={heightIn.toString()}
+            onChange={handleHeightInChange}
+            id="heightIn"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="bmi">BMI</Label>
+          <Input placeholder="BMI" type="text" value={bmi} disabled id="bmi" />
         </div>
       </div>
     </div>
