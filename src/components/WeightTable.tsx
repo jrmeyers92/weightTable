@@ -27,8 +27,6 @@ const WeightTable: React.FC = () => {
     setResult(weightLossResult);
   }, [currentWeight, goalWeight]);
 
-  console.log(result);
-
   // Assuming result[0] contains the data structure as per your function's return type
   const data = result[0] || {};
 

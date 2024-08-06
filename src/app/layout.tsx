@@ -1,4 +1,5 @@
 import Nav from "@/components/Nav";
+import { ClerkProvider } from "@clerk/nextjs";
 import { GoogleTagManager } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -17,12 +18,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <Nav />
-        {children}
-      </body>
-      <GoogleTagManager gtmId="G-0YZY74PHR8" />
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={inter.className}>
+          <Nav />
+          {children}
+        </body>
+        <GoogleTagManager gtmId="G-0YZY74PHR8" />
+      </html>
+    </ClerkProvider>
   );
 }

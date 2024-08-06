@@ -9,6 +9,7 @@ import {
 } from "@/lib/calculations";
 import { WeightContextType } from "@/types/global";
 import { useEffect } from "react";
+import { Button } from "./ui/button";
 
 const WeightInputs = () => {
   const {
@@ -148,6 +149,9 @@ const WeightInputs = () => {
           <Input placeholder="BMI" type="text" value={bmi} disabled id="bmi" />
         </div>
       </div>
+      <Button className="" variant="outline">
+        Save
+      </Button>
     </div>
   );
 };
