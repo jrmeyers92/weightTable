@@ -1,6 +1,13 @@
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+import {
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { buttonVariants } from "./ui/button";
 
 const Nav = async () => {
   const user = await currentUser();
@@ -12,7 +19,17 @@ const Nav = async () => {
 
       <ul className="ml-auto">
         <SignedOut>
-          <SignInButton />
+          <div className="flex gap-4">
+            <Link href="/sign-up" className={buttonVariants()}>
+              Sign Up
+            </Link>
+            <Link
+              href="/sign-in"
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Sign In
+            </Link>
+          </div>
         </SignedOut>
         <SignedIn>
           <UserButton />

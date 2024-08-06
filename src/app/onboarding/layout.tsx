@@ -6,6 +6,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // Check if a user has completed onboarding
+  // If yes, redirect them to /dashboard
   if (auth().sessionClaims?.metadata.onboardingComplete === true) {
     redirect("/");
   }

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,16 +8,21 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  email     String    @unique
-  gender    String
-  birthdate DateTime?
-  firstName String?
-  lastName  String?
-  clerkId   String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  posts     Post[]
+  id         Int      @id @default(autoincrement())
+  clerkId    String   @unique
+  email      String   @unique
+  firstName  String
+  lastName   String
+  birthYear  Int?
+  birthMonth String?
+  birthDay   Int?
+  gender     String?
+  city       String?
+  state      String?
+  zipCode    Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Post       Post[]
 }
 
 model Post {
@@ -29,8 +31,8 @@ model Post {
   goalWeight    Int
   heightFt      Int
   heightIn      Int
-  userId        String
+  UserId        Int
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
-  user          User     @relation(fields: [userId], references: [id])
+  User          User     @relation(fields: [UserId], references: [id])
 }
