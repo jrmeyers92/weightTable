@@ -145,13 +145,11 @@ const WeightInputs = () => {
         </div>
 
         <div>
-          <Label htmlFor="bmi">BMI</Label>
+          <Label htmlFor="bmi">Current BMI</Label>
           <Input placeholder="BMI" type="text" value={bmi} disabled id="bmi" />
         </div>
       </div>
-      <Button className="" variant="outline">
-        Save
-      </Button>
+      <Button className="">Save</Button>
     </div>
   );
 };
